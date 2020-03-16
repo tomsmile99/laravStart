@@ -34,7 +34,7 @@
                               <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                           </a>
 
-                          <a href="">
+                          <a href="#" @click="deleteUser(user.id)">
                               <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delet</a>
                           </a>
                       </td>
@@ -123,21 +123,54 @@
             }
         },
         methods: {
+            deleteUser(id){
+                swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        
+                        // Send request to the server
+                        if (result.value) {
+                            this.form.delete('api/user/'+id).then(()=>{
+                                swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                    )
+                                Fire.$emit('AfterCreate');
+                            }).catch(()=>{
+                                swal("Failed!", "There was something wronge.", "warning");
+                            });
+                        }
+                    })
+            },
             loadUser(){
                 axios.get("api/user").then(({ data }) => (this.users = data.data))
             },
             createUser() {
                 this.$Progress.start();
-                this.form.post('api/user');
-                Fire.$emit('AfterCreate');
-                $('#AddNew').modal('hide')
+                
+                this.form.post('api/user')
+                .then(() =>{
+                    Fire.$emit('AfterCreate');
+                    $('#AddNew').modal('hide')
 
-                toast.fire({
-                    icon: 'success',
-                    title: 'Create Users in successfully'
+                    toast.fire({
+                        icon: 'success',
+                        title: 'Create Users in successfully'
+                    })
+
+                    this.$Progress.finish();
                 })
+                .catch(() =>{
 
-                this.$Progress.finish();
+                })
+                
             }
         },
         created() {
