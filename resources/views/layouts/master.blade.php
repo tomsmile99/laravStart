@@ -61,7 +61,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -75,6 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li>
+          @if (Auth::user()->type == 'admin')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cog"></i>
@@ -92,6 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>
+          @endif
           <li class="nav-item has-treeview">
             <router-link to="/profile" class="nav-link" active-class="active">
               <i class="nav-icon fas fa-user"></i>
